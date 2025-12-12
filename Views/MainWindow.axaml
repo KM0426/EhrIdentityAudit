@@ -3,7 +3,7 @@
         xmlns:vm="using:EhrIdentityAudit.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="750"
         x:Class="EhrIdentityAudit.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -11,20 +11,82 @@
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Read" Command="{Binding ExitCommand}"/>
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}"/>
             </MenuItem>
             <MenuItem Header="_Config">
                 <MenuItem Header="_Config" Command="{Binding ShowConfigCommand}"/>
             </MenuItem>
         </Menu>
-        <TextBlock Text="Welcome to EhrIdentityAudit!" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid DockPanel.Dock="Bottom">
+            <DockPanel LastChildFill="True">
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.3*"/>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel LastChildFill="True" Grid.Column="0">
+                        <Button Content="カルテ利用者一覧.xlsx" Command="{Binding LoadEHRUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                            <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
+                                        Minimum="0" Maximum="100" Value="{Binding EhrProgressValue}"
+                                        ShowProgressText="false"/>
+                            <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding EHR_USERs}"        
+                                    GridLinesVisibility="All"
+                                    BorderThickness="1" BorderBrush="Gray"
+                                    AutoGenerateColumns="True"
+                                    >
+                            </DataGrid>
+                        </DockPanel>
+                    </DockPanel>
+                    <DockPanel LastChildFill="True" Grid.Column="1">
+                        <Button Content="職員一覧.xlsx" Command="{Binding LoadSYOKUINUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                            <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
+                                        Minimum="0" Maximum="100" Value="{Binding SyokuinProgressValue}"
+                                        ShowProgressText="false"/>
+                            <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding SYOKUIN_USERs}"        
+                                    GridLinesVisibility="All"
+                                    BorderThickness="1" BorderBrush="Gray"
+                                    AutoGenerateColumns="True"
+                                    >
+                            </DataGrid>
+                        </DockPanel>
+                    </DockPanel>
+                    <DockPanel LastChildFill="True" Grid.Column="2">
+                        <Button Content="委託派遣一覧.xlsx" Command="{Binding LoadHAKENITAKUUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                            <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
+                                        Minimum="0" Maximum="100" Value="{Binding HakenitakuProgressValue}"
+                                        ShowProgressText="false"/>
+                            <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding HAKENITAKU_USERs}"        
+                                    GridLinesVisibility="All"
+                                    BorderThickness="1" BorderBrush="Gray"
+                                    AutoGenerateColumns="True"
+                                    >
+                            </DataGrid>
+                        </DockPanel>
+                    </DockPanel>            
+
+                </Grid>
+                <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
+                    <Button Content="氏名突合を実行" Command="{Binding ExecuteAuditCommand}" Margin="0,10,0,10" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                    <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding JoinUsers}"        
+                                GridLinesVisibility="All"
+                                BorderThickness="1" BorderBrush="Gray"
+                                AutoGenerateColumns="True"
+                                > 
+                    </DataGrid>
+                </DockPanel>
+            </DockPanel>
+        </Grid>
+
     </DockPanel>
 
 </Window>
