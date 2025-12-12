@@ -3,8 +3,9 @@ namespace EhrIdentityAudit.Models;
 
 public class JoinUser
 {
-    public string Id { get; set; } = "";
-    public string Name { get; set; } = "";
+    public string EHRUserId { get; set; } = "";
+    public string EHRUserName { get; set; } = "";
+    public bool IsDouseiDoumei { get; set; } = false;
     public string ShokusyuCode { get; set; } = "";
     public DateTime? LastLoginDate { get { return R_LastLoginDate > N_LastLoginDate ? R_LastLoginDate : N_LastLoginDate; } }
     public DateTime? N_LastLoginDate { get; set; } = new DateTime(1900, 1, 1);

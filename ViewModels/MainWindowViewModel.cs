@@ -15,6 +15,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
 
     // ProgressValue
+    private int _auditProgressValue;
+    public int AuditProgressValue
+    {
+        get => _auditProgressValue;
+        set
+        {
+            _auditProgressValue = value;
+            OnPropertyChanged(nameof(AuditProgressValue));
+        }
+    }
     private int _ehrProgressValue;
     public int EhrProgressValue
     {
@@ -190,8 +200,8 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Debug.WriteLine("ExecuteAuditCommand 実行");
 
-
-        var join = await Task.Run(() => AuditService.ExecuteAudit(EHR_USERs, SYOKUIN_USERs, HAKENITAKU_USERs));
+        var progress = new Progress<int>(value => AuditProgressValue = value);
+        var join = await Task.Run(() => AuditService.ExecuteAudit(EHR_USERs, SYOKUIN_USERs, HAKENITAKU_USERs, progress));
         JoinUsers = new ObservableCollection<JoinUser>(join);
     }
     public void ReadCommand()
