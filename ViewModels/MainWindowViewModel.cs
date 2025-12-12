@@ -204,6 +204,33 @@ public partial class MainWindowViewModel : ViewModelBase
         var join = await Task.Run(() => AuditService.ExecuteAudit(EHR_USERs, SYOKUIN_USERs, HAKENITAKU_USERs, progress));
         JoinUsers = new ObservableCollection<JoinUser>(join);
     }
+    public void TemplateDownloadCommand()
+    {
+        Debug.WriteLine("TemplateDownloadCommand 実行");
+        // テンプレートダウンロード処理を書く
+        // ユーザーに保存場所（ディレクトリ）を選択させる
+        var folderPath = string.Empty;
+        var window = App.Current.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+        var storage = window.StorageProvider;
+        storage.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+        {
+            Title = "テンプレートの保存先フォルダを選択してください"
+        }).ContinueWith(t =>
+        {
+            var folders = t.Result;
+            if (folders != null && folders.Count > 0)
+            {
+                folderPath = folders[0].Path.LocalPath;
+            }
+        }).Wait();
+        if (!string.IsNullOrEmpty(folderPath))
+        {
+            TemplateService.SaveTemplates(folderPath);
+        }
+
+    }
     public void ReadCommand()
     {
         // TODO: 読み込み処理を書く

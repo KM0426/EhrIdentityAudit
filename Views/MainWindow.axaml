@@ -19,8 +19,8 @@
             <MenuItem Header="_File">
                 <MenuItem Header="_Exit" Command="{Binding ExitCommand}"/>
             </MenuItem>
-            <MenuItem Header="_Config">
-                <MenuItem Header="_Config" Command="{Binding ShowConfigCommand}"/>
+            <MenuItem Header="_Template">
+                <MenuItem Header="_Download" Command="{Binding TemplateDownloadCommand}"/>
             </MenuItem>
         </Menu>
         <Grid DockPanel.Dock="Bottom">
