@@ -31,7 +31,7 @@ public static class AuditService
             .ToDictionary(g => g.Key, g => g.FirstOrDefault());
         
         var ehrNameLookup = EHR_List
-            .Where(e => !e.Id.StartsWith("R"))
+            .Where(e => !e.Id.StartsWith("R") && !e.Id.StartsWith("E"))
             .GroupBy(e => NameStandardization.ConvertName(e.Name))
             .ToDictionary(g => g.Key, g => g.ToList());
 
@@ -43,7 +43,7 @@ public static class AuditService
 
             syokuinLookup.TryGetValue(standardizedEhrName, out var matchedSyokuin);
             hakenitakuLookup.TryGetValue(standardizedEhrName, out var matchedHakenitaku);
-            bool douseidoumeiCheck = ehrNameLookup.TryGetValue(standardizedEhrName, out var matches) && matches.Any(e => e.Id != ehr.Id);
+            bool douseidoumeiCheck = ehrNameLookup.TryGetValue(standardizedEhrName, out var matches) && matches.Any(e => e.Id != ehr.Id && !e.Id.StartsWith("R") && !e.Id.StartsWith("E"));
             
             var joinUser = new JoinUser
             {

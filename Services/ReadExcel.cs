@@ -15,12 +15,27 @@ public static class ReadFile
 {
     public static async Task<ObservableCollection<EHR_USER>> ReadEHRUserFromExcelAsync(string filePath, IProgress<int>? progress = null)
     {
-        progress?.Report(10);
+        progress?.Report(0);
         var ehrUsers = new ObservableCollection<EHR_USER>();
         if (!File.Exists(filePath)) return ehrUsers;
 
         DataSet? ds = null;
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        // filePathがFile.Openで開けるか確認する
+        try
+        {
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+            }
+        }
+        catch (Exception ex)
+        {
+            // ファイルが開けない場合は、progressを100にして戻る
+           
+            progress?.Report(100);
+            return ehrUsers;
+        }
+
         using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
             using (IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
@@ -32,12 +47,22 @@ public static class ReadFile
                         UseHeaderRow = true
                     }
                 });
-                if (ds.Tables.Count == 0) return ehrUsers;
-                if (ds.Tables[0].Rows.Count == 0) return ehrUsers;
+                if (ds.Tables.Count == 0)
+                {
+                    progress?.Report(100);
+                    return ehrUsers;
+                }
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    progress?.Report(100);
+                    return ehrUsers;
+                }
                 // 
-                progress?.Report(20);
                 foreach (DataRow item in ds.Tables[0].Rows)
                 {
+                    // progress を0から最大50まで、Rowsカウントで進める
+                    progress?.Report((int)(50 * ehrUsers.Count / ds.Tables[0].Rows.Count));
+                    
                     var Id = item["RID"]?.ToString() ?? "";
                     // item["LAST_YMD"]は20130614形式の日付文字列
                     // item["LAST_YMD"]をDateTimeに変換する
@@ -63,6 +88,8 @@ public static class ReadFile
                 var usersToRemove = new List<EHR_USER>();
                 foreach (var user in ehrUsers)
                 {
+                    // progress を50から最大90まで、ehrUsersカウントで進める
+                    progress?.Report(50 + (40 * ehrUsers.IndexOf(user) / ehrUsers.Count));
                     if (!user.Id.StartsWith("R"))
                     {
                         var rUser = ehrUsers.FirstOrDefault(u => u.Id == "R" + user.Id);

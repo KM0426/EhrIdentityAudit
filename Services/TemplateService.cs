@@ -21,7 +21,7 @@ public static class TemplateService
             Directory.CreateDirectory(templateDirectory);
         }
         // EHR_USERテンプレート作成
-        var ehrTemplatePath = Path.Combine(templateDirectory, "EHR_USER_Template.xlsx");
+        var ehrTemplatePath = Path.Combine(templateDirectory, "カルテ利用者一覧_Template.xlsx");
         // Openize.OpenXML-SDKを使用してエクセルファイルを作成する
         using (var workbook = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(ehrTemplatePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
         {
@@ -56,7 +56,7 @@ public static class TemplateService
         }
 
         // SYOKUIN_USERテンプレート作成
-        var syokuinTemplatePath = Path.Combine(templateDirectory, "SYOKUIN_USER_Template.xlsx");
+        var syokuinTemplatePath = Path.Combine(templateDirectory, "職員一覧_Template.xlsx");
         using (var workbook = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(syokuinTemplatePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
         {
             var workbookPart = workbook.AddWorkbookPart();
@@ -75,12 +75,12 @@ public static class TemplateService
             var headerRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
             headerRow.Append(
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("職員番号"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
-                new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("氏名"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("ステータス"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("地区区分"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("所属"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("職名"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
-                new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("職種"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String }
+                new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("職種"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
+                new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("氏名"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String }
             );
             sheetData.AppendChild(headerRow);
             sheets.AppendChild(sheet);
@@ -88,7 +88,7 @@ public static class TemplateService
         }
 
         // HAKENITAKU_USERテンプレート作成
-        var hakenitakuTemplatePath = Path.Combine(templateDirectory, "HAKENITAKU_USER_Template.xlsx");
+        var hakenitakuTemplatePath = Path.Combine(templateDirectory, "委託派遣一覧_Template.xlsx");
         using (var workbook = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(hakenitakuTemplatePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
         {
             var workbookPart = workbook.AddWorkbookPart();

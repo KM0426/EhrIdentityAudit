@@ -36,7 +36,7 @@
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding EhrProgressValue}"
-                                        ShowProgressText="false"/>
+                                        ShowProgressText="true"/>
                             <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding EHR_USERs}"        
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
@@ -50,7 +50,7 @@
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding SyokuinProgressValue}"
-                                        ShowProgressText="false"/>
+                                        ShowProgressText="true"/>
                             <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding SYOKUIN_USERs}"        
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
@@ -64,7 +64,7 @@
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding HakenitakuProgressValue}"
-                                        ShowProgressText="false"/>
+                                        ShowProgressText="true"/>
                             <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding HAKENITAKU_USERs}"        
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
@@ -86,6 +86,7 @@
                                 GridLinesVisibility="All"
                                 BorderThickness="1" BorderBrush="Gray"
                                 AutoGenerateColumns="True"
+                                ClipboardCopyMode="IncludeHeader"
                                 > 
                     </DataGrid>
                 </DockPanel>
