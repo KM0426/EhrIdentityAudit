@@ -32,7 +32,7 @@
                         <ColumnDefinition Width="0.3*"/>
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="True" Grid.Column="0">
-                        <Button Content="カルテ利用者一覧.xlsx" Command="{Binding LoadEHRUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <Button Content="カルテ利用者一覧.xlsx" Command="{Binding LoadEHRUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding IsLoadingEHRUser}"/>
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding EhrProgressValue}"
@@ -41,12 +41,13 @@
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
                                     AutoGenerateColumns="True"
+                                    IsReadOnly="True"
                                     >
                             </DataGrid>
                         </DockPanel>
                     </DockPanel>
                     <DockPanel LastChildFill="True" Grid.Column="1">
-                        <Button Content="職員一覧.xlsx" Command="{Binding LoadSYOKUINUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <Button Content="職員一覧.xlsx" Command="{Binding LoadSYOKUINUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding IsLoadingSYOKUINUser}"/>
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding SyokuinProgressValue}"
@@ -55,12 +56,13 @@
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
                                     AutoGenerateColumns="True"
+                                    IsReadOnly="True"
                                     >
                             </DataGrid>
                         </DockPanel>
                     </DockPanel>
                     <DockPanel LastChildFill="True" Grid.Column="2">
-                        <Button Content="委託派遣一覧.xlsx" Command="{Binding LoadHAKENITAKUUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <Button Content="委託派遣一覧.xlsx" Command="{Binding LoadHAKENITAKUUserCommand}" Margin="0,10,0,0" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding IsLoadingHAKENITAKUUser}"/>
                         <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                             <ProgressBar DockPanel.Dock="Bottom" Margin="10" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding HakenitakuProgressValue}"
@@ -69,6 +71,7 @@
                                     GridLinesVisibility="All"
                                     BorderThickness="1" BorderBrush="Gray"
                                     AutoGenerateColumns="True"
+                                    IsReadOnly="True"
                                     >
                             </DataGrid>
                         </DockPanel>
@@ -77,16 +80,23 @@
                 </Grid>
                 <DockPanel DockPanel.Dock="Bottom" LastChildFill="True">
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <Button Content="氏名突合を実行" Command="{Binding ExecuteAuditCommand}" Margin="0,10,0,10" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        <Button Content="氏名突合を実行" Command="{Binding ExecuteAuditCommand}" Margin="0,10,30,10"  HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding IsLoadedEHRUser}"/>
                         <ProgressBar Width="400" Height="20" 
                                         Minimum="0" Maximum="100" Value="{Binding AuditProgressValue}"
                                         ShowProgressText="true"/>
+                        <Button Content="全リストDL" Command="{Binding DownloadJoinListCommand}" Margin="130,10,0,10"  HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding HasJoinUser}"/>                        
+                        <Button Content="棚卸リストDL" Command="{Binding DownloadInventoryListCommand}" Margin="20,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding HasJoinUser}"/>
+                        <StackPanel Orientation="Vertical">
+                        <TextBlock Text="(作成日および最終利用が共に" FontSize="12" Margin="10,8,0,10" VerticalAlignment="Center"/>
+                        <TextBlock Text="2年以上前の有効アカウント)" FontSize="12" Margin="20,-8,0,10" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </StackPanel>
                     <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding JoinUsers}"        
                                 GridLinesVisibility="All"
                                 BorderThickness="1" BorderBrush="Gray"
                                 AutoGenerateColumns="True"
                                 ClipboardCopyMode="IncludeHeader"
+                                IsReadOnly="True"
                                 > 
                     </DataGrid>
                 </DockPanel>

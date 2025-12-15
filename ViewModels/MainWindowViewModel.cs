@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using EhrIdentityAudit.Models;
 using EhrIdentityAudit.Services;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.VisualBasic;
+using Microsoft.WindowsAPICodePack.Shell.Interop;
 
 namespace EhrIdentityAudit.ViewModels;
 
@@ -13,7 +15,10 @@ public partial class MainWindowViewModel : ViewModelBase
 {
 
 
-
+    public bool HasJoinUser
+    {
+        get => JoinUsers.Count > 0;
+    }
     // ProgressValue
     private int _auditProgressValue;
     public int AuditProgressValue
@@ -63,6 +68,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _ehrUsers = value;
             OnPropertyChanged(nameof(EHR_USERs));
+            OnPropertyChanged(nameof(IsLoadedEHRUser));
         }
     }
     private ObservableCollection<SYOKUIN_USER> _syokuinUsers = new ObservableCollection<SYOKUIN_USER>();
@@ -93,6 +99,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _joinUsers = value;
             OnPropertyChanged(nameof(JoinUsers));
+            OnPropertyChanged(nameof(HasJoinUser));
         }
     }
 
@@ -102,7 +109,88 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     public string Greeting { get; } = "Welcome to Avalonia!";
-    // File → Read
+
+    public void DownloadJoinListCommand()
+    {
+
+        Debug.WriteLine("DownloadJoinListCommand 実行");
+        var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+        var storage = window?.StorageProvider;
+        var folderPath = string.Empty;
+        storage?.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+        {
+            Title = "保存先フォルダを選択してください"
+        }).ContinueWith(t =>
+        {
+            var folders = t.Result;
+            if (folders != null && folders.Count > 0)
+            {
+                folderPath = folders[0].Path.LocalPath;
+            }
+        }).Wait();
+        if (!string.IsNullOrEmpty(folderPath))
+        {
+            InventoryListService.SaveJoinList(JoinUsers, folderPath);
+            // msgbox表示
+            var msgBox = new Avalonia.Controls.Window
+            {
+                Title = "完了",
+                Width = 300,
+                Height = 150,
+                Content = new Avalonia.Controls.TextBlock
+                {
+                    Text = "全リストのダウンロードが完了しました。",
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap
+                }
+            };
+            msgBox.ShowDialog(window);
+        }
+
+    }
+    public void DownloadInventoryListCommand()
+    {
+
+        Debug.WriteLine("DownloadInventoryListCommand 実行");
+        var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+        var storage = window?.StorageProvider;
+        var folderPath = string.Empty;
+        storage?.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+        {
+            Title = "保存先フォルダを選択してください"
+        }).ContinueWith(t =>
+        {
+            var folders = t.Result;
+            if (folders != null && folders.Count > 0)
+            {
+                folderPath = folders[0].Path.LocalPath;
+            }
+        }).Wait();
+        if (!string.IsNullOrEmpty(folderPath))
+        {
+            InventoryListService.SaveInventoryList(JoinUsers, folderPath);
+            var msgBox = new Avalonia.Controls.Window
+            {
+                Title = "完了",
+                Width = 300,
+                Height = 150,
+                Content = new Avalonia.Controls.TextBlock
+                {
+                    Text = "棚卸対象リストのダウンロードが完了しました。",
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap
+                }
+            };
+            msgBox.ShowDialog(window);
+        }
+
+    }
     public void LoadEHRUserCommand()
     {
         Debug.WriteLine("LoadEHRUserCommand 実行");
@@ -139,29 +227,112 @@ public partial class MainWindowViewModel : ViewModelBase
             LoadHAKENITAKUUserAsync(filePath);
         }
     }
+    private bool _isLoadingEHRUser = false;
+    public bool IsLoadingEHRUser
+    {
+        get => !_isLoadingEHRUser;
+        set
+        {
+            _isLoadingEHRUser = value;
+            OnPropertyChanged(nameof(IsLoadingEHRUser));
+        }
+    }
+    private bool _isLoadingSYOKUINUser = false;
+    public bool IsLoadingSYOKUINUser
+    {
+        get => !_isLoadingSYOKUINUser;
+        set
+        {
+            _isLoadingSYOKUINUser = value;
+            OnPropertyChanged(nameof(IsLoadingSYOKUINUser));
+        }
+    }
+    private bool _isLoadingHAKENITAKUUser = false;
+    public bool IsLoadingHAKENITAKUUser
+    {
+        get => !_isLoadingHAKENITAKUUser;
+        set
+        {
+            _isLoadingHAKENITAKUUser = value;
+            OnPropertyChanged(nameof(IsLoadingHAKENITAKUUser));
+        }
+    }
+    public bool IsLoadedEHRUser
+    {
+        get => EHR_USERs.Count > 0;
+    }
     private async void LoadEHRUserAsync(string filePath)
     {
         // ReadEHRUserFromExcelAsync内の処理状況をUIに反映させるために、awaitを使用して非同期で実行
         // 読み込み中はUIがフリーズしないようにする
         // ProgressValueを更新する処理も追加する
         var progress = new Progress<int>(value => EhrProgressValue = value);
+        IsLoadingEHRUser = true;
         var users = await Task.Run(() => ReadFile.ReadEHRUserFromExcelAsync(filePath, progress));
-
-        EHR_USERs = new ObservableCollection<EHR_USER>(users);
+        IsLoadingEHRUser = false;
+        if (users.IsSuccess)
+        {
+            EHR_USERs = new ObservableCollection<EHR_USER>(users.Value!);
+        }
+        else
+        {
+            // エラーメッセージを表示する処理を書く
+            Debug.WriteLine($"EHR_USERの読み込みに失敗しました: {users.ErrorMessage}");
+            ShowErrorMessage($"EHR_USERの読み込みに失敗しました:\n\r== 内容 ===\n\r {users.ErrorMessage}");
+        }
+    }
+    private void ShowErrorMessage(string message)
+    {
+        var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+        var msgBox = new Avalonia.Controls.Window
+        {
+            Title = "エラー",
+            Width = 400,
+            Height = 200,
+            Content = new Avalonia.Controls.TextBlock
+            {
+                Text = message,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap
+            }
+        };
+        msgBox.ShowDialog(window);
     }
     private async void LoadSYOKUINUserAsync(string filePath)
     {
         var progress = new Progress<int>(value => SyokuinProgressValue = value);
         var users = await Task.Run(() => ReadFile.ReadSYOKUINUserFromExcelAsync(filePath, progress));
+        if (users.IsSuccess)
+        {
+            SYOKUIN_USERs = new ObservableCollection<SYOKUIN_USER>(users.Value!);
+        }
+        else
+        {
+            // エラーメッセージを表示する処理を書く
+            Debug.WriteLine($"SYOKUIN_USERの読み込みに失敗しました: {users.ErrorMessage}");
+            // MsgBox表示
+            ShowErrorMessage($"SYOKUIN_USERの読み込みに失敗しました:\n\r== 内容 ===\n\r {users.ErrorMessage}");
+        }
 
-        SYOKUIN_USERs = new ObservableCollection<SYOKUIN_USER>(users);
     }
     private async void LoadHAKENITAKUUserAsync(string filePath)
     {
         var progress = new Progress<int>(value => HakenitakuProgressValue = value);
         var users = await Task.Run(() => ReadFile.ReadHAKENITAKUUserFromExcelAsync(filePath, progress));
-
-        HAKENITAKU_USERs = new ObservableCollection<HAKENITAKU_USER>(users);
+        if (!users.IsSuccess)
+        {
+            // エラーメッセージを表示する処理を書く
+            Debug.WriteLine($"HAKENITAKU_USERの読み込みに失敗しました: {users.ErrorMessage}");
+            ShowErrorMessage($"HAKENITAKU_USERの読み込みに失敗しました:\n\r== 内容 ===\n\r {users.ErrorMessage}");
+            return;
+        }
+        else
+        {
+            HAKENITAKU_USERs = new ObservableCollection<HAKENITAKU_USER>(users.Value!);
+        }
     }
     private string OpenFileDialog(string Title)
     {

@@ -25,11 +25,11 @@ public static class AuditService
         var syokuinLookup = SYOKUIN_List
             .GroupBy(s => NameStandardization.ConvertName(s.Name))
             .ToDictionary(g => g.Key, g => g.FirstOrDefault());
-        
+
         var hakenitakuLookup = HAKENITAKU_List
             .GroupBy(h => NameStandardization.ConvertName(h.Name))
             .ToDictionary(g => g.Key, g => g.FirstOrDefault());
-        
+
         var ehrNameLookup = EHR_List
             .Where(e => !e.Id.StartsWith("R") && !e.Id.StartsWith("E"))
             .GroupBy(e => NameStandardization.ConvertName(e.Name))
@@ -43,34 +43,121 @@ public static class AuditService
 
             syokuinLookup.TryGetValue(standardizedEhrName, out var matchedSyokuin);
             hakenitakuLookup.TryGetValue(standardizedEhrName, out var matchedHakenitaku);
-            bool douseidoumeiCheck = ehrNameLookup.TryGetValue(standardizedEhrName, out var matches) && matches.Any(e => e.Id != ehr.Id && !e.Id.StartsWith("R") && !e.Id.StartsWith("E"));
-            
+            bool douseidoumeiCheck = false;
+            if (ehr.Id.StartsWith("R") || ehr.Id.StartsWith("E"))
+            {
+            }
+            else
+            {
+                douseidoumeiCheck = ehrNameLookup.TryGetValue(standardizedEhrName, out var matches) && matches.Any(e => e.Id != ehr.Id && !e.Id.StartsWith("R") && !e.Id.StartsWith("E") && !(ehr.IsStopped || ehr.IsDeleted) && !(e.IsStopped || e.IsDeleted));
+            }
+            if (douseidoumeiCheck)
+            {
+                // SYOKUIN_Listに同姓同名がいるかチェックし、いたら全て取得
+
+                if (SYOKUIN_List.FindAll(s => NameStandardization.ConvertName(s.Name) == standardizedEhrName).Count > 1)
+                {
+                    var syokuinMatches = SYOKUIN_List.FindAll(s => NameStandardization.ConvertName(s.Name) == standardizedEhrName);
+                    foreach (var item in syokuinMatches)
+                    {
+                        matchedSyokuin = item;
+                        var joinUserDousei = new JoinUser
+                        {
+                            EHRUserId = ehr.Id,
+                            EHRUserName = ehr.Name,
+                            IsDouseiDoumei = douseidoumeiCheck,
+                            ShokusyuCode = ehr.ShokusyuCode,
+                            N_LastLoginDate = ehr.N_LastLoginDate,
+                            R_LastLoginDate = ehr.R_LastLoginDate,
+                            CreatedDate = ehr.CreatedDate,
+                            IsStopped = ehr.IsStopped,
+                            IsDeleted = ehr.IsDeleted,
+                            Id_Jinji = matchedSyokuin?.Id ?? "",
+                            Name_Jinji = matchedSyokuin?.Name ?? "",
+                            Status_Jinji = matchedSyokuin?.Status ?? "",
+                            Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
+                            Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
+                            Syokumei_Jinji = matchedSyokuin?.Syokumei ?? "",
+                            ShokuShu_Jinji = matchedSyokuin?.ShokuShu ?? "",
+                            No_Jinjigai = matchedHakenitaku?.No ?? "",
+                            Kubun_Jinjigai = matchedHakenitaku?.Kubun ?? "",
+                            Company_Jinjigai = matchedHakenitaku?.Company ?? "",
+                            Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
+                            Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
+                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                            Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
+                            Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
+                        };
+                        result.Add(joinUserDousei);
+                    }
+                }
+                // hakenitakuLookupに同姓同名がいるかチェックし、いたら全て取得
+
+                if (HAKENITAKU_List.FindAll(h => NameStandardization.ConvertName(h.Name) == standardizedEhrName).Count > 1)
+                {
+                    var hakenitakuMatches = HAKENITAKU_List.FindAll(h => NameStandardization.ConvertName(h.Name) == standardizedEhrName);
+                    foreach (var item in hakenitakuMatches)
+                    {
+                        matchedHakenitaku = item;
+                        var joinUserDousei = new JoinUser
+                        {
+                            EHRUserId = ehr.Id,
+                            EHRUserName = ehr.Name,
+                            IsDouseiDoumei = douseidoumeiCheck,
+                            ShokusyuCode = ehr.ShokusyuCode,
+                            N_LastLoginDate = ehr.N_LastLoginDate,
+                            R_LastLoginDate = ehr.R_LastLoginDate,
+                            CreatedDate = ehr.CreatedDate,
+                            IsStopped = ehr.IsStopped,
+                            IsDeleted = ehr.IsDeleted,
+                            Id_Jinji = matchedSyokuin?.Id ?? "",
+                            Name_Jinji = matchedSyokuin?.Name ?? "",
+                            Status_Jinji = matchedSyokuin?.Status ?? "",
+                            Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
+                            Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
+                            Syokumei_Jinji = matchedSyokuin?.Syokumei ?? "",
+                            ShokuShu_Jinji = matchedSyokuin?.ShokuShu ?? "",
+                            No_Jinjigai = matchedHakenitaku?.No ?? "",
+                            Kubun_Jinjigai = matchedHakenitaku?.Kubun ?? "",
+                            Company_Jinjigai = matchedHakenitaku?.Company ?? "",
+                            Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
+                            Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
+                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                            Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
+                            Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
+                        };
+                        result.Add(joinUserDousei);
+                    }
+                }
+                continue;
+            }
+
             var joinUser = new JoinUser
             {
-            EHRUserId = ehr.Id,
-            EHRUserName = ehr.Name,
-            IsDouseiDoumei = douseidoumeiCheck,
-            ShokusyuCode = ehr.ShokusyuCode,
-            N_LastLoginDate = ehr.N_LastLoginDate,
-            R_LastLoginDate = ehr.R_LastLoginDate,
-            CreatedDate = ehr.CreatedDate,
-            IsStopped = ehr.IsStopped,
-            IsDeleted = ehr.IsDeleted,
-            Id_Jinji = matchedSyokuin?.Id ?? "",
-            Name_Jinji = matchedSyokuin?.Name ?? "",
-            Status_Jinji = matchedSyokuin?.Status ?? "",
-            Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
-            Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
-            Syokumei_Jinji = matchedSyokuin?.Syokumei ?? "",
-            ShokuShu_Jinji = matchedSyokuin?.ShokuShu ?? "",
-            No_Jinjigai = matchedHakenitaku?.No ?? "",
-            Kubun_Jinjigai = matchedHakenitaku?.Kubun ?? "",
-            Company_Jinjigai = matchedHakenitaku?.Company ?? "",
-            Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
-            Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
-            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
-            Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
-            Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
+                EHRUserId = ehr.Id,
+                EHRUserName = ehr.Name,
+                IsDouseiDoumei = douseidoumeiCheck,
+                ShokusyuCode = ehr.ShokusyuCode,
+                N_LastLoginDate = ehr.N_LastLoginDate,
+                R_LastLoginDate = ehr.R_LastLoginDate,
+                CreatedDate = ehr.CreatedDate,
+                IsStopped = ehr.IsStopped,
+                IsDeleted = ehr.IsDeleted,
+                Id_Jinji = matchedSyokuin?.Id ?? "",
+                Name_Jinji = matchedSyokuin?.Name ?? "",
+                Status_Jinji = matchedSyokuin?.Status ?? "",
+                Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
+                Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
+                Syokumei_Jinji = matchedSyokuin?.Syokumei ?? "",
+                ShokuShu_Jinji = matchedSyokuin?.ShokuShu ?? "",
+                No_Jinjigai = matchedHakenitaku?.No ?? "",
+                Kubun_Jinjigai = matchedHakenitaku?.Kubun ?? "",
+                Company_Jinjigai = matchedHakenitaku?.Company ?? "",
+                Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
+                Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
+                Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
+                Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
             };
 
             result.Add(joinUser);
