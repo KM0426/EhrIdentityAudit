@@ -48,7 +48,7 @@ public static class TemplateService
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("STP_FLG"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("DEL_FLG"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String }
             );
-            sheetData.AppendChild(headerRow);
+            sheetData?.AppendChild(headerRow);
             sheets.AppendChild(sheet);
 
 
@@ -82,13 +82,13 @@ public static class TemplateService
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("職種"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("氏名"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String }
             );
-            sheetData.AppendChild(headerRow);
+            sheetData?.AppendChild(headerRow);
             sheets.AppendChild(sheet);
             workbookPart.Workbook.Save();
         }
 
         // HAKENITAKU_USERテンプレート作成
-        var hakenitakuTemplatePath = Path.Combine(templateDirectory, "委託派遣一覧_Template.xlsx");
+        var hakenitakuTemplatePath = Path.Combine(templateDirectory, "委託派遣人材育成一覧_Template.xlsx");
         using (var workbook = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Create(hakenitakuTemplatePath, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook))
         {
             var workbookPart = workbook.AddWorkbookPart();
@@ -115,7 +115,7 @@ public static class TemplateService
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("勤務場所"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String },
                 new DocumentFormat.OpenXml.Spreadsheet.Cell() { CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue("所管部署"), DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String }
             );
-            sheetData.AppendChild(headerRow);
+            sheetData?.AppendChild(headerRow);
             sheets.AppendChild(sheet);
             workbookPart.Workbook.Save();
         }

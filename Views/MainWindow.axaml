@@ -87,8 +87,8 @@
                         <Button Content="全リストDL" Command="{Binding DownloadJoinListCommand}" Margin="130,10,0,10"  HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding HasJoinUser}"/>                        
                         <Button Content="棚卸リストDL" Command="{Binding DownloadInventoryListCommand}" Margin="20,10,0,10" HorizontalAlignment="Center" VerticalAlignment="Bottom" IsEnabled="{Binding HasJoinUser}"/>
                         <StackPanel Orientation="Vertical">
-                        <TextBlock Text="(作成日および最終利用が共に" FontSize="12" Margin="10,8,0,10" VerticalAlignment="Center"/>
-                        <TextBlock Text="2年以上前の有効アカウント)" FontSize="12" Margin="20,-8,0,10" VerticalAlignment="Center"/>
+                        <TextBlock Text="(通常ID：作成日および最終利用が共に2年以上前の有効アカウント)" FontSize="11" Margin="10,8,0,10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <TextBlock Text="(E付きID：作成日および最終利用が共に3年以上前の有効アカウント)" FontSize="11" Margin="20,-8,0,10" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </StackPanel>
                     <DataGrid DockPanel.Dock="Bottom" Margin="10" ItemsSource="{Binding JoinUsers}"        

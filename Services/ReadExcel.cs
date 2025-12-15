@@ -60,7 +60,7 @@ public static class ReadFile
                         }
                     }
 
-
+                    
                     foreach (DataRow item in ds.Tables[0].Rows)
                     {
                         // progress を10から最大20まで、Rowsカウントで進める

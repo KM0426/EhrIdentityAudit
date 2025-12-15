@@ -50,7 +50,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = new char[str.Length * 2];
@@ -96,7 +96,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = str.ToCharArray();
@@ -129,7 +129,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = str.ToCharArray();
@@ -177,7 +177,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = str.ToCharArray();
@@ -226,7 +226,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = new char[str.Length * 2];
@@ -303,7 +303,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = new char[str.Length];
@@ -410,7 +410,7 @@ public sealed class KanaEx
     {
         if (str == null || str.Length == 0)
         {
-            return str;
+            return "";
         }
 
         char[] cs = new char[str.Length];

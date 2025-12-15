@@ -85,7 +85,7 @@ public static class ExcelExportService
                         DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String
                     });
                 }
-                sheetData.AppendChild(headerRow);
+                sheetData?.AppendChild(headerRow);
                 // データ行を追加
                 foreach (var user in inventoryList)
                 {
@@ -99,7 +99,7 @@ public static class ExcelExportService
                             DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String
                         });
                     }
-                    sheetData.AppendChild(dataRow);
+                    sheetData?.AppendChild(dataRow);
                 }
 
                 sheets.AppendChild(sheet);

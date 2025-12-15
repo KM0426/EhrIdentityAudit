@@ -110,7 +110,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string Greeting { get; } = "Welcome to Avalonia!";
 
-    public void DownloadJoinListCommand()
+    public async Task DownloadJoinListCommand()
     {
 
         Debug.WriteLine("DownloadJoinListCommand 実行");
@@ -132,7 +132,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }).Wait();
         if (!string.IsNullOrEmpty(folderPath))
         {
-            InventoryListService.SaveJoinList(JoinUsers, folderPath);
+            await InventoryListService.SaveJoinList(JoinUsers, folderPath);
             // msgbox表示
             var msgBox = new Avalonia.Controls.Window
             {
@@ -147,11 +147,14 @@ public partial class MainWindowViewModel : ViewModelBase
                     TextWrapping = Avalonia.Media.TextWrapping.Wrap
                 }
             };
-            msgBox.ShowDialog(window);
+            if(window != null)
+            {
+                await msgBox.ShowDialog(window);                
+            }
         }
 
     }
-    public void DownloadInventoryListCommand()
+    public async Task DownloadInventoryListCommand()
     {
 
         Debug.WriteLine("DownloadInventoryListCommand 実行");
@@ -173,7 +176,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }).Wait();
         if (!string.IsNullOrEmpty(folderPath))
         {
-            InventoryListService.SaveInventoryList(JoinUsers, folderPath);
+            await InventoryListService.SaveInventoryList(JoinUsers, folderPath);
             var msgBox = new Avalonia.Controls.Window
             {
                 Title = "完了",
@@ -187,7 +190,11 @@ public partial class MainWindowViewModel : ViewModelBase
                     TextWrapping = Avalonia.Media.TextWrapping.Wrap
                 }
             };
-            msgBox.ShowDialog(window);
+            if(window != null)
+            {
+                await msgBox.ShowDialog(window);                
+            }
+                
         }
 
     }
@@ -281,7 +288,7 @@ public partial class MainWindowViewModel : ViewModelBase
             ShowErrorMessage($"EHR_USERの読み込みに失敗しました:\n\r== 内容 ===\n\r {users.ErrorMessage}");
         }
     }
-    private void ShowErrorMessage(string message)
+    private async void ShowErrorMessage(string message)
     {
         var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
             ? desktop.MainWindow
@@ -299,7 +306,10 @@ public partial class MainWindowViewModel : ViewModelBase
                 TextWrapping = Avalonia.Media.TextWrapping.Wrap
             }
         };
-        msgBox.ShowDialog(window);
+        if(window != null)
+        {
+            await msgBox.ShowDialog(window);
+        }
     }
     private async void LoadSYOKUINUserAsync(string filePath)
     {
@@ -336,12 +346,12 @@ public partial class MainWindowViewModel : ViewModelBase
     }
     private string OpenFileDialog(string Title)
     {
-        var window = App.Current.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+        var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
             ? desktop.MainWindow
             : null;
         var filePath = string.Empty;
-        var storage = window.StorageProvider;
-        storage.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions
+        var storage = window?.StorageProvider;
+        storage?.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions
         {
             Title = Title,
             AllowMultiple = false,
@@ -381,11 +391,11 @@ public partial class MainWindowViewModel : ViewModelBase
         // テンプレートダウンロード処理を書く
         // ユーザーに保存場所（ディレクトリ）を選択させる
         var folderPath = string.Empty;
-        var window = App.Current.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+        var window = App.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
             ? desktop.MainWindow
             : null;
-        var storage = window.StorageProvider;
-        storage.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
+        var storage = window?.StorageProvider;
+        storage?.OpenFolderPickerAsync(new Avalonia.Platform.Storage.FolderPickerOpenOptions
         {
             Title = "テンプレートの保存先フォルダを選択してください"
         }).ContinueWith(t =>
