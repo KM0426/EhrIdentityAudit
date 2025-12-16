@@ -64,7 +64,7 @@ public static class AuditService
                         var joinUserDousei = new JoinUser
                         {
                             EHRUserId = ehr.Id,
-                            EHRUserName = ehr.Name,
+                            EHRUserName = ehr.Name.Replace("　", " "),
                             IsDouseiDoumei = douseidoumeiCheck,
                             ShokusyuCode = ehr.ShokusyuCode,
                             N_LastLoginDate = ehr.N_LastLoginDate,
@@ -73,7 +73,7 @@ public static class AuditService
                             IsStopped = ehr.IsStopped,
                             IsDeleted = ehr.IsDeleted,
                             Id_Jinji = matchedSyokuin?.Id ?? "",
-                            Name_Jinji = matchedSyokuin?.Name ?? "",
+                            Name_Jinji = matchedSyokuin?.Name.Replace("　", " ") ?? "",
                             Status_Jinji = matchedSyokuin?.Status ?? "",
                             Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
                             Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
@@ -84,7 +84,7 @@ public static class AuditService
                             Company_Jinjigai = matchedHakenitaku?.Company ?? "",
                             Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
                             Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
-                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name.Replace("　", " ") ?? "",
                             Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
                             Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
                         };
@@ -102,7 +102,7 @@ public static class AuditService
                         var joinUserDousei = new JoinUser
                         {
                             EHRUserId = ehr.Id,
-                            EHRUserName = ehr.Name,
+                            EHRUserName = ehr.Name.Replace("　", " "),
                             IsDouseiDoumei = douseidoumeiCheck,
                             ShokusyuCode = ehr.ShokusyuCode,
                             N_LastLoginDate = ehr.N_LastLoginDate,
@@ -111,7 +111,7 @@ public static class AuditService
                             IsStopped = ehr.IsStopped,
                             IsDeleted = ehr.IsDeleted,
                             Id_Jinji = matchedSyokuin?.Id ?? "",
-                            Name_Jinji = matchedSyokuin?.Name ?? "",
+                            Name_Jinji = matchedSyokuin?.Name.Replace("　", " ") ?? "",
                             Status_Jinji = matchedSyokuin?.Status ?? "",
                             Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
                             Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
@@ -122,7 +122,7 @@ public static class AuditService
                             Company_Jinjigai = matchedHakenitaku?.Company ?? "",
                             Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
                             Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
-                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                            Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name.Replace("　", " ") ?? "",
                             Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
                             Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
                         };
@@ -135,7 +135,7 @@ public static class AuditService
             var joinUser = new JoinUser
             {
                 EHRUserId = ehr.Id,
-                EHRUserName = ehr.Name,
+                EHRUserName = ehr.Name.Replace("　", " "),
                 IsDouseiDoumei = douseidoumeiCheck,
                 ShokusyuCode = ehr.ShokusyuCode,
                 N_LastLoginDate = ehr.N_LastLoginDate,
@@ -144,7 +144,7 @@ public static class AuditService
                 IsStopped = ehr.IsStopped,
                 IsDeleted = ehr.IsDeleted,
                 Id_Jinji = matchedSyokuin?.Id ?? "",
-                Name_Jinji = matchedSyokuin?.Name ?? "",
+                Name_Jinji = matchedSyokuin?.Name.Replace("　", " ") ?? "",
                 Status_Jinji = matchedSyokuin?.Status ?? "",
                 Chiku_Jinji = matchedSyokuin?.Chiku ?? "",
                 Syozoku_Jinji = matchedSyokuin?.Syozoku ?? "",
@@ -155,7 +155,7 @@ public static class AuditService
                 Company_Jinjigai = matchedHakenitaku?.Company ?? "",
                 Gyousyu_Jinjigai = matchedHakenitaku?.Gyousyu ?? "",
                 Mibun_Jinjigai = matchedHakenitaku?.Mibun ?? "",
-                Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name ?? "",
+                Name_itakuhaken_Jinjigai = matchedHakenitaku?.Name.Replace("　", " ") ?? "",
                 Kinmubasyo_Jinjigai = matchedHakenitaku?.Kinmubasyo ?? "",
                 Kanribumon_Jinjigai = matchedHakenitaku?.Kanribumon ?? ""
             };

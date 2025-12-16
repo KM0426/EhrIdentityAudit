@@ -29,10 +29,10 @@ public static class InventoryListService
             string.IsNullOrEmpty(j.No_Jinjigai) &&
             (j.EHRUserId.StartsWith("E") ?
                 ((j.LastLoginDate == null || (DateTime.Now - j.LastLoginDate.Value).TotalDays > 1095) &&
-                 (j.CreatedDate == null || (DateTime.Now - j.CreatedDate.Value).TotalDays > 1095))
+                    (j.CreatedDate == null || (DateTime.Now - j.CreatedDate.Value).TotalDays > 1095))
                 :
                 ((j.LastLoginDate == null || (DateTime.Now - j.LastLoginDate.Value).TotalDays > 730) &&
-                 (j.CreatedDate == null || (DateTime.Now - j.CreatedDate.Value).TotalDays > 730))
+                    (j.CreatedDate == null || (DateTime.Now - j.CreatedDate.Value).TotalDays > 730))
             )
         ).ToList();
 
@@ -53,8 +53,8 @@ public static class ExcelExportService
     public static async Task ExportInventoryListToExcel(System.Collections.Generic.List<JoinUser> inventoryList, string folderPath)
     {
         // Excelファイルに書き出す処理を書く
-        // ここでは仮にファイル名を "InventoryList_yyyymmdd.xlsx" とする
-        string filePath = System.IO.Path.Combine(folderPath, $"InventoryList_{DateTime.Now:yyyyMMdd}.xlsx");
+        // ここでは仮にファイル名を "InventoryList_yyyymmddhhMMss.xlsx" とする
+        string filePath = System.IO.Path.Combine(folderPath, $"InventoryList_{DateTime.Now:yyyyMMddHHmmss}.xlsx");
 
         //Openize.OpenXML-SDKを使用してエクセルファイルを作成する
         await Task.Run(() =>
